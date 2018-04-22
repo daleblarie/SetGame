@@ -104,4 +104,12 @@ public class Game {
     public ArrayList<BoardSquare> getSelected() {
         return selected;
     }
+
+    public Deck getD() {
+        return d;
+    }
+
+    public Board getB() {
+        return b;
+    }
 }
