@@ -57,9 +57,19 @@ public class GuiGame extends Application{
                 System.out.println(sel);
                 System.out.println("testing");
 
+                if (sel.size() == 3){
+                    for (int i = 0; i < 3; i += 1){
+                        g.addToSelected(sel.get(i));
+                        g.testSelected();
+
+                    }
+                } else {
+                    System.out.println("Wrong number of cards");
+                }
             }
         };
         testSet.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+
         buttonArea.getChildren().addAll(testSet);
         pane.setBottom(buttonArea);
 

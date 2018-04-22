@@ -47,11 +47,9 @@ public class Game {
 
     /**
      *
-     * @param row the row of the square
-     * @param col the column of the square
      */
-    public void addToSelected(int row, int col){
-        selected.add(b.getSquare(row, col));
+    public void addToSelected(BoardSquare bsq){
+        selected.add(bsq);
     }
 
     // method that gets the number of selected cards
