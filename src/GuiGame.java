@@ -33,52 +33,75 @@ public class GuiGame extends Application{
     Board b = g.getB();
     BorderPane pane = new BorderPane();
     GridPane squares = new GridPane();
-    ArrayList<BoardSquare> sel= new ArrayList(0);
+    ArrayList<BoardSquare> sel = new ArrayList(0);
+    ArrayList<CardPane> selectedPanes = new ArrayList<>(0);
 
     @Override
     public void start(Stage primaryStage) {
 
 //        sel.add(b.getSquare(0,0));
-        HBox buttonArea = new HBox();
-        Button testSet = new Button("Test Set");
+
         EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent e) {
 //                sel.add(b.getSquare(0,0));
-                for (int i = 0; i < b.numCols(); i += 1){
-//                    b.getSquare(0, i).setSelected(true);
-                    for (int j = 0; j < b.numRows(); j += 1){
-//                        sel.add(b.getSquare(1,1));
-                        if (b.getSquare(j, i).getSelected()){
-                            sel.add(b.getSquare(j, i));
-                        }
-                    }
+                CardPane clickedCardPane = (CardPane)e.getTarget();
+                BoardSquare clickedBoardSquare = clickedCardPane.sq;
+                if (g.getSelected().contains(clickedBoardSquare)){
+                    g.getSelected().remove(clickedBoardSquare);
+                    clickedBoardSquare.setSelected(false);
+                    clickedCardPane.toggleSelectedColor();
+                    selectedPanes.remove(clickedCardPane);
+                } else {
+                    selectedPanes.add(clickedCardPane);
+                    g.addToSelected(clickedBoardSquare);
+                    clickedBoardSquare.setSelected(true);
+                    clickedCardPane.toggleSelectedColor();
                 }
-                System.out.println(sel);
-                System.out.println("testing");
-
-                if (sel.size() == 3){
-                    for (int i = 0; i < 3; i += 1){
-                        g.addToSelected(sel.get(i));
+                System.out.println(g.getSelected());
+                if (g.numSelected() == 3){
                         g.testSelected();
 
-                    }
-                } else {
-                    System.out.println("Wrong number of cards");
-                }
-            }
-        };
-        testSet.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+                        for (int i = 0; i < 3; i += 1) {
+                            selectedPanes.get(i).toggleSelectedColor();
+                        }
+                        // whats happening is the card pane is changing because a new card is being drawn in its place (im pretty sure)
+                        selectedPanes.clear();
 
-        buttonArea.getChildren().addAll(testSet);
+                    }
+                }
+            };
+        squares.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+
+        HBox buttonArea = new HBox();
+        Button add3Button = new Button("Add 3 Cards");
+        Text text = new Text("There are" + d.remainingCards() + " cards remaining");
+        buttonArea.getChildren().addAll(add3Button, text);
         pane.setBottom(buttonArea);
 
+        EventHandler<MouseEvent> eventHandler1 = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                b.add3(d);
+                for (int i = 0; i < 3; i += 1){
+                    BoardSquare bsq = b.getSquare(i, i);
+                    HBox square = new CardPane(bsq);
+                    square.setAlignment(Pos.CENTER);
+                    square.setPrefSize(100, 100);
+                    square.setStyle("-fx-border-width: 5;"
+                            + "-fx-border-color: black;");
+                    squares.add(square, b.numCols(), i);
+                }
+                text.setText("There are " + d.remainingCards() + " cards remaining");
+                primaryStage.show();
+            }
+        };
+        add3Button.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler1);
 
 
         for (int col = 0; col < 4; col += 1) {
             for (int r = 0; r < 3; r += 1) {
-                Card c = d.topCard();
-                BoardSquare bsq = new BoardSquare(c, r, col);
+                BoardSquare bsq = b.getSquare(r, col);
 
                 HBox square = new CardPane(bsq);
                 square.setAlignment(Pos.CENTER);
@@ -92,6 +115,7 @@ public class GuiGame extends Application{
         }
         pane.setCenter(squares);
         squares.setAlignment(Pos.CENTER);// center grid pane inside center of borderpane
+
 
         Scene scene = new Scene(pane);
         primaryStage.setScene(scene);

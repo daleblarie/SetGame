@@ -60,6 +60,9 @@ public class Deck {
         return top;
      }
 
+     public int remainingCards(){
+         return cards.size();
+     }
      // deck does not have a to string method because I think it works better on the card object instead of the deck object
 
 }

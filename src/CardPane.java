@@ -46,8 +46,9 @@ public class CardPane extends HBox {
         card = sq.getThisCard();
         num = number();
         this.setPrefSize(100, 100);
-        this.setStyle("-fx-border-width: 5;"
-                + "-fx-border-color: black;");
+        this.toggleSelectedColor();
+//        this.setStyle("-fx-border-width: 5;"
+//                + "-fx-border-color: black;");
         for (int i = 0; i < num; i++) {
             color();
             makeShape();
@@ -55,20 +56,6 @@ public class CardPane extends HBox {
             shape.setStroke(color);
             this.getChildren().add(shape);
         }
-        EventHandler<MouseEvent> eventHandler = new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent e) {
-                if (sq.getSelected()){
-                    sq.setSelected(false);
-                    System.out.println("unselected");
-                } else {
-                    sq.setSelected(true);
-                    System.out.println("this is now selected");
-                }
-//                System.out.println("hello world");
-            }
-        };
-        this.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
     }
     private Paint color(){
         cardColor = card.getColor();
@@ -109,6 +96,16 @@ public class CardPane extends HBox {
             shape.setFill(WHITE);
         } else {
             shape.setFill(color);
+        }
+    }
+    public void toggleSelectedColor(){
+        if (sq.getSelected()){
+            this.setStyle("-fx-border-width: 5;"
+                    + "-fx-border-color: black;"
+                    + "-fx-background-color: yellow;");
+        } else {
+            this.setStyle("-fx-border-width: 5;"
+                    + "-fx-border-color: black;");
         }
     }
 }

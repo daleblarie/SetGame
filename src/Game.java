@@ -11,7 +11,7 @@ public class Game {
     public Game(){
         // making a new deck and shuffling it
         d = new Deck();
-        d.shuffle();
+//        d.shuffle();
         // making the board with the shuffled deck
         b = new Board(d);
     }
@@ -63,7 +63,7 @@ public class Game {
     }
 
     // method that tests the selected squares to see if its a set
-    public void testSelected(){
+    public boolean testSelected(){
 
         BoardSquare sq1 = selected.get(0);
         BoardSquare sq2 = selected.get(1);
@@ -79,10 +79,15 @@ public class Game {
             sq1.setThisCard(d.topCard());
             sq2.setThisCard(d.topCard());
             sq3.setThisCard(d.topCard());
+            return true;
         }
         else{
             System.out.println("this is not a set");
             selected.clear();
+            sq1.setSelected(false);
+            sq2.setSelected(false);
+            sq3.setSelected(false);
+            return false;
         }
     }
     // method that removes the selected card from the list, if it has been selected
