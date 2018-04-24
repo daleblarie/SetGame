@@ -16,7 +16,7 @@ public class Deck {
      */
     public Deck() {
         // looping through each attribute of the card
-        for (int i = 0; i < 3; i += 1) {
+        for (int i = 0; i < 1; i += 1) {
             for (int j = 0; j < 3; j += 1) {
                 for (int k = 0; k < 3; k += 1) {
                     for (int h = 0; h < 3; h += 1) {

@@ -36,11 +36,15 @@ public class CardPane extends HBox {
     int cardNum;
     int cardFill;
     int num;
+    int myRow;
+    int myCol;
     Shape shape;
 
     Card card;
     BoardSquare sq;
     public CardPane(BoardSquare sq) {
+        setMyCol(sq.getCol());
+        setMyRow(sq.getRow());
         this.setAlignment(Pos.CENTER);
         this.sq = sq;
         card = sq.getThisCard();
@@ -107,5 +111,11 @@ public class CardPane extends HBox {
             this.setStyle("-fx-border-width: 5;"
                     + "-fx-border-color: black;");
         }
+    }
+    public void setMyRow(int r){
+        myRow = r;
+    }
+    public void setMyCol(int c){
+        myCol = c;
     }
 }

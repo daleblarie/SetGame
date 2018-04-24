@@ -76,18 +76,18 @@ public class Game {
 
         if (Card.isSet(card1, card2, card3)){
             System.out.println("It was a set!");
-            sq1.setThisCard(d.topCard());
-            sq2.setThisCard(d.topCard());
-            sq3.setThisCard(d.topCard());
             return true;
         }
         else{
             System.out.println("this is not a set");
-            selected.clear();
-            sq1.setSelected(false);
-            sq2.setSelected(false);
-            sq3.setSelected(false);
+            
             return false;
+        }
+    }
+    
+    public void replaceCards(){
+        for (BoardSquare sq: selected) {
+            sq.setThisCard(d.topCard());
         }
     }
     // method that removes the selected card from the list, if it has been selected
@@ -96,6 +96,13 @@ public class Game {
         if (selected.contains(thisSquare)){
             selected.remove(thisSquare);
         }
+    }
+    public void clearSelected(){
+        for (BoardSquare sq: selected) {
+            sq.setSelected(false);
+        }
+        selected.clear();
+
     }
 
     // getter for selected list

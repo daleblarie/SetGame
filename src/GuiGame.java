@@ -33,11 +33,16 @@ public class GuiGame extends Application{
     Board b = g.getB();
     BorderPane pane = new BorderPane();
     GridPane squares = new GridPane();
-    ArrayList<BoardSquare> sel = new ArrayList(0);
+    ArrayList<BoardSquare> selectedSquares = new ArrayList<>(0);
     ArrayList<CardPane> selectedPanes = new ArrayList<>(0);
 
     @Override
     public void start(Stage primaryStage) {
+        HBox buttonArea = new HBox();
+        Button add3Button = new Button("Add 3 Cards");
+        Text text = new Text("There are" + d.remainingCards() + " cards remaining");
+        buttonArea.getChildren().addAll(add3Button, text);
+        pane.setBottom(buttonArea);
 
 //        sel.add(b.getSquare(0,0));
 
@@ -45,55 +50,86 @@ public class GuiGame extends Application{
             @Override
             public void handle(MouseEvent e) {
 //                sel.add(b.getSquare(0,0));
+                e.consume();
                 CardPane clickedCardPane = (CardPane)e.getTarget();
+
                 BoardSquare clickedBoardSquare = clickedCardPane.sq;
                 if (g.getSelected().contains(clickedBoardSquare)){
                     g.getSelected().remove(clickedBoardSquare);
                     clickedBoardSquare.setSelected(false);
                     clickedCardPane.toggleSelectedColor();
+                    selectedSquares.remove(clickedBoardSquare);
                     selectedPanes.remove(clickedCardPane);
                 } else {
                     selectedPanes.add(clickedCardPane);
                     g.addToSelected(clickedBoardSquare);
                     clickedBoardSquare.setSelected(true);
                     clickedCardPane.toggleSelectedColor();
+                    selectedSquares.add(clickedBoardSquare);
                 }
                 System.out.println(g.getSelected());
                 if (g.numSelected() == 3){
-                        g.testSelected();
+                    for (int i = 0; i < 3; i += 1) {
+                        selectedPanes.get(i).sq.setSelected(false);
+                        selectedPanes.get(i).toggleSelectedColor();
+                    }
+                    if (g.testSelected()){
+                        if (!d.isEmpty()) {
+                            g.replaceCards(); // do logic when the deck is empty
+                            for (int i = 0; i < g.numSelected(); i += 1) {
+                                int cardPaneRow = selectedPanes.get(i).myRow;
+                                int cardPaneCol = selectedPanes.get(i).myCol;
+                                BoardSquare squareToAdd = b.getSquare(selectedSquares.get(i).getRow(), selectedSquares.get(i).getCol());
+                                HBox newCardToAdd = new CardPane(squareToAdd);
+                                squares.getChildren().remove(selectedPanes.get(i));
+                                squares.add(newCardToAdd, cardPaneCol, cardPaneRow);
+                            }
+                        } else {
+                            for (int i = 0; i < g.numSelected(); i += 1) {
+                                squares.getChildren().remove(selectedPanes.get(i));
+                            }
 
-                        for (int i = 0; i < 3; i += 1) {
-                            selectedPanes.get(i).toggleSelectedColor();
                         }
-                        // whats happening is the card pane is changing because a new card is being drawn in its place (im pretty sure)
-                        selectedPanes.clear();
+
+                    }else {
+                        g.clearSelected();
+                    }
+
+
+                    // whats happening is the card pane is changing because a new card is being drawn in its place (im pretty sure)
+                    selectedPanes.clear();
+                    selectedSquares.clear();
+
+                        text.setText("There are " + d.remainingCards() + " cards remaining");
+                        g.getSelected().clear();
+                        primaryStage.show();
 
                     }
                 }
             };
         squares.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
 
-        HBox buttonArea = new HBox();
-        Button add3Button = new Button("Add 3 Cards");
-        Text text = new Text("There are" + d.remainingCards() + " cards remaining");
-        buttonArea.getChildren().addAll(add3Button, text);
-        pane.setBottom(buttonArea);
 
         EventHandler<MouseEvent> eventHandler1 = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                b.add3(d);
-                for (int i = 0; i < 3; i += 1){
-                    BoardSquare bsq = b.getSquare(i, i);
-                    HBox square = new CardPane(bsq);
-                    square.setAlignment(Pos.CENTER);
-                    square.setPrefSize(100, 100);
-                    square.setStyle("-fx-border-width: 5;"
-                            + "-fx-border-color: black;");
-                    squares.add(square, b.numCols(), i);
+                int newColIndex = b.numCols();
+                if (b.numCols() != 6) {
+                    b.add3(d);
+                    for (int i = 0; i < 3; i += 1) {
+                        BoardSquare bsq = b.getSquare(i, b.numCols() - 1);
+                        HBox square = new CardPane(bsq);
+                        square.setAlignment(Pos.CENTER);
+                        square.setPrefSize(100, 100);
+                        square.setStyle("-fx-border-width: 5;"
+                                + "-fx-border-color: black;");
+                        squares.add(square, newColIndex, i);
+                    }
+                    text.setText("There are " + d.remainingCards() + " cards remaining");
+                    primaryStage.show();
+                } else {
+                    System.out.println("Too many cards on the board!");
                 }
-                text.setText("There are " + d.remainingCards() + " cards remaining");
-                primaryStage.show();
             }
         };
         add3Button.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler1);

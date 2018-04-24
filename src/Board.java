@@ -76,13 +76,14 @@ public class Board {
      * @param deck the deck to pull from
      */
     public void add3(Deck deck) {
+        int colForNewSquares = this.numCols();
         for (int i = 0; i < 3; i += 1) {
             // creating a new square to add
-            BoardSquare newSquare = new BoardSquare(deck.topCard(), i, this.numCols() + 1);
+            BoardSquare newSquare = new BoardSquare(deck.topCard(), i, colForNewSquares);
             // getting the row to add the square to
             ArrayList<BoardSquare> currentRow = board.get(i);
             // adding the square to the appropriate row
-            currentRow.add(i, newSquare);
+            currentRow.add(colForNewSquares, newSquare);
         }
     }
 
