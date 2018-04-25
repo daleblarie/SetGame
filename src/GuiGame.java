@@ -51,7 +51,7 @@ public class GuiGame extends Application{
             public void handle(MouseEvent e) {
 //                sel.add(b.getSquare(0,0));
                 e.consume();
-                CardPane clickedCardPane = (CardPane)e.getTarget();
+                CardPane clickedCardPane = (CardPane)e.getSource();
 
                 BoardSquare clickedBoardSquare = clickedCardPane.sq;
                 if (g.getSelected().contains(clickedBoardSquare)){
@@ -81,6 +81,7 @@ public class GuiGame extends Application{
                                 int cardPaneCol = selectedPanes.get(i).myCol;
                                 BoardSquare squareToAdd = b.getSquare(selectedSquares.get(i).getRow(), selectedSquares.get(i).getCol());
                                 HBox newCardToAdd = new CardPane(squareToAdd);
+                                newCardToAdd.addEventFilter(MouseEvent.MOUSE_CLICKED, this);
                                 squares.getChildren().remove(selectedPanes.get(i));
                                 squares.add(newCardToAdd, cardPaneCol, cardPaneRow);
                             }
@@ -107,18 +108,19 @@ public class GuiGame extends Application{
                     }
                 }
             };
-        squares.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
+//        squares.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
 
 
         EventHandler<MouseEvent> eventHandler1 = new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 int newColIndex = b.numCols();
-                if (b.numCols() != 6) {
+                if (b.numCols() != 6 || d.remainingCards() == 3) {
                     b.add3(d);
                     for (int i = 0; i < 3; i += 1) {
                         BoardSquare bsq = b.getSquare(i, b.numCols() - 1);
                         HBox square = new CardPane(bsq);
+                        square.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
                         square.setAlignment(Pos.CENTER);
                         square.setPrefSize(100, 100);
                         square.setStyle("-fx-border-width: 5;"
@@ -140,6 +142,7 @@ public class GuiGame extends Application{
                 BoardSquare bsq = b.getSquare(r, col);
 
                 HBox square = new CardPane(bsq);
+                square.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler);
                 square.setAlignment(Pos.CENTER);
                 square.setPrefSize(100, 100);
                 square.setStyle("-fx-border-width: 5;"
