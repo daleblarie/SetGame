@@ -26,6 +26,8 @@ public class Card {
     public static final int TWO = 1;
     public static final int THREE = 2;
 
+    public static final int NULL = 3;
+
     private int color, fill, shape, num;
 
     // constructor
@@ -74,7 +76,7 @@ public class Card {
     }
 
     private static boolean isNumAllDifferent(Card card1, Card card2, Card card3){
-        return card1.getNum() != card2.getNum() && card2.getNum() != card3.getNum() && card2.getNum() != card3.getNum();
+        return card1.getNum() != card2.getNum() && card2.getNum() != card3.getNum() && card1.getNum() != card3.getNum();
     }
 
     private static boolean isShapeAllTheSame(Card card1, Card card2, Card card3){
@@ -82,7 +84,14 @@ public class Card {
     }
 
     private static boolean isShapeAllDifferent(Card card1, Card card2, Card card3){
-        return card1.getShape() != card2.getShape() && card2.getShape() != card3.getShape() && card2.getShape() != card3.getShape();
+        return card1.getShape() != card2.getShape() && card2.getShape() != card3.getShape() && card1.getShape() != card3.getShape();
+    }
+
+    private static boolean isNull(Card card1, Card card2, Card card3){
+        if (card1.getFill() == 3 || card2.getFill() == 3 || card3.getFill() == 3){
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -111,6 +120,9 @@ public class Card {
         if (!isShapeAllDifferent(card1, card2, card3) && !isShapeAllTheSame(card1, card2, card3)) {
             flag = false;
         }
+        if (!isNull(card1, card2, card3)){
+            flag = false;
+        }
         return flag;
     }
 
@@ -132,13 +144,17 @@ public class Card {
             cardAttributes.add("1");
         } else if (num == 1){
             cardAttributes.add("2");
-        } else {
+        } else if (num == 1){
+            cardAttributes.add("NULL");
+        }else {
             cardAttributes.add("3");
         }
         if (col == 0) {
             cardAttributes.add("RED");
         } else if (col == 1){
             cardAttributes.add("BLUE");
+        }else if (col == 3){
+            cardAttributes.add("NULL");
         } else {
             cardAttributes.add("PURPLE");
         }
@@ -146,7 +162,9 @@ public class Card {
             cardAttributes.add("FILLED");
         } else if (fill == 1){
             cardAttributes.add("HATCHED");
-        } else {
+        } else if (fill == 3){
+            cardAttributes.add("NULL");
+        }else {
             cardAttributes.add("BLANK");
         }
         if (shape == 0) {

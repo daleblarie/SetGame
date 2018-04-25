@@ -111,4 +111,8 @@ public class Board {
     public boolean isEmpty(){
         return board.isEmpty();
     }
+
+    public ArrayList<BoardSquare> getRow(int row){
+        return board.get(row);
+    }
 }

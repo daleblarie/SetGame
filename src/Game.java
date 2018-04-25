@@ -11,10 +11,47 @@ public class Game {
     public Game(){
         // making a new deck and shuffling it
         d = new Deck();
-//        d.shuffle();
+        d.shuffle();
         // making the board with the shuffled deck
         b = new Board(d);
     }
+
+    public ArrayList<BoardSquare> cheat() {
+        ArrayList<BoardSquare> matchSet = new ArrayList<>(0);
+        ArrayList<BoardSquare> listOfAllSquares = new ArrayList<>();
+        for (int i = 0; i < b.numRows(); i += 1) {
+            for (int j = 0; j < b.numCols(); j += 1) {
+                listOfAllSquares.add(b.getSquare(i, j));
+            }
+        }
+        for (int i = 0; i < listOfAllSquares.size(); i += 1) {
+            for (int j = i + 1; j < listOfAllSquares.size(); j += 1) {
+                for (int k = j + 1; k < listOfAllSquares.size(); k += 1) {
+
+                    BoardSquare sq1 = listOfAllSquares.get(i);
+                    BoardSquare sq2 = listOfAllSquares.get(j);
+                    BoardSquare sq3 = listOfAllSquares.get(k);
+
+
+                    Card card1 = sq1.getThisCard();
+                    Card card2 = sq2.getThisCard();
+                    Card card3 = sq3.getThisCard();
+
+                    if (Card.isSet(card1, card2, card3)) {
+                        System.out.println(card1 + " " + card2 + " " + card3);
+                        matchSet.add(sq1);
+                        matchSet.add(sq2);
+                        matchSet.add(sq3);
+                        return matchSet;
+                    }
+                }
+            }
+        }
+        System.out.println("There are no sets on the board");
+        return matchSet;
+    }
+
+
     // creating a method that adds three cards to the game
     public void add3(){
         b.add3(d);
@@ -87,7 +124,20 @@ public class Game {
     
     public void replaceCards(){
         for (BoardSquare sq: selected) {
-            sq.setThisCard(d.topCard());
+            if (!d.isEmpty()){
+                sq.setThisCard(d.topCard());
+            } else{
+                for (int i = 0; i < b.numRows(); i += 1){
+                        for (int j = 0; j < b.getRow(i).size(); j += 1){
+                            if (b.getRow(i).get(j) == sq){
+                                Card nullCard = new Card(3,3,3,3);
+                                BoardSquare nullSquare = new BoardSquare(nullCard, i, j);
+                                b.getRow(i).set(j, nullSquare);
+                            }
+
+                    }
+                }
+            }
         }
     }
     // method that removes the selected card from the list, if it has been selected

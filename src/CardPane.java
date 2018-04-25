@@ -39,10 +39,12 @@ public class CardPane extends HBox {
     int myRow;
     int myCol;
     Shape shape;
+    private BoardSquare myBoardSquare;
 
     Card card;
     BoardSquare sq;
     public CardPane(BoardSquare sq) {
+        myBoardSquare = this.sq;
         setMyCol(sq.getCol());
         setMyRow(sq.getRow());
         this.setAlignment(Pos.CENTER);
@@ -112,10 +114,18 @@ public class CardPane extends HBox {
                     + "-fx-border-color: black;");
         }
     }
+    public void toggleCheatColor(){
+        this.setStyle("-fx-border-width: 5;"
+                + "-fx-border-color: black;"
+                + "-fx-background-color: orange;");
+    }
     public void setMyRow(int r){
         myRow = r;
     }
     public void setMyCol(int c){
         myCol = c;
+    }
+    public BoardSquare getMyBoardSquare(){
+        return myBoardSquare;
     }
 }

@@ -35,13 +35,15 @@ public class GuiGame extends Application{
     GridPane squares = new GridPane();
     ArrayList<BoardSquare> selectedSquares = new ArrayList<>(0);
     ArrayList<CardPane> selectedPanes = new ArrayList<>(0);
+    ArrayList<CardPane> allCardPanesOnBoard = new ArrayList<>(0);
 
     @Override
     public void start(Stage primaryStage) {
         HBox buttonArea = new HBox();
         Button add3Button = new Button("Add 3 Cards");
         Text text = new Text("There are" + d.remainingCards() + " cards remaining");
-        buttonArea.getChildren().addAll(add3Button, text);
+        Button cheatButton = new Button("Cheat");
+        buttonArea.getChildren().addAll(add3Button, text, cheatButton);
         pane.setBottom(buttonArea);
 
 //        sel.add(b.getSquare(0,0));
@@ -80,14 +82,19 @@ public class GuiGame extends Application{
                                 int cardPaneRow = selectedPanes.get(i).myRow;
                                 int cardPaneCol = selectedPanes.get(i).myCol;
                                 BoardSquare squareToAdd = b.getSquare(selectedSquares.get(i).getRow(), selectedSquares.get(i).getCol());
-                                HBox newCardToAdd = new CardPane(squareToAdd);
+                                CardPane newCardBeingAdded = new CardPane(squareToAdd);
+                                HBox newCardToAdd = (HBox)newCardBeingAdded;
                                 newCardToAdd.addEventFilter(MouseEvent.MOUSE_CLICKED, this);
                                 squares.getChildren().remove(selectedPanes.get(i));
                                 squares.add(newCardToAdd, cardPaneCol, cardPaneRow);
+                                allCardPanesOnBoard.remove(selectedPanes.get(i));
+                                allCardPanesOnBoard.add(newCardBeingAdded);
                             }
                         } else {
                             for (int i = 0; i < g.numSelected(); i += 1) {
+                                g.replaceCards();
                                 squares.getChildren().remove(selectedPanes.get(i));
+                                allCardPanesOnBoard.remove(selectedPanes.get(i));
                             }
 
                         }
@@ -126,6 +133,7 @@ public class GuiGame extends Application{
                         square.setStyle("-fx-border-width: 5;"
                                 + "-fx-border-color: black;");
                         squares.add(square, newColIndex, i);
+                        allCardPanesOnBoard.add((CardPane)square);
                     }
                     text.setText("There are " + d.remainingCards() + " cards remaining");
                     primaryStage.show();
@@ -136,6 +144,37 @@ public class GuiGame extends Application{
         };
         add3Button.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler1);
 
+        EventHandler<MouseEvent> eventHandler2 = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                ArrayList<BoardSquare> cheatSquares = new ArrayList<>(0);
+                for (int i = 0; i < selectedPanes.size(); i += 1) {
+                    selectedPanes.get(i).sq.setSelected(false);
+                    selectedPanes.get(i).toggleSelectedColor();
+                }
+                ArrayList<BoardSquare> check = g.cheat();
+                selectedPanes.clear();
+                selectedSquares.clear();
+                if (!check.isEmpty()){
+                    for (int i = 0; i < g.cheat().size(); i += 1){
+                        cheatSquares.add(g.cheat().get(i));
+                    }
+
+                }
+                for (int i = 0; i < allCardPanesOnBoard.size(); i += 1) {
+                    if (!cheatSquares.isEmpty()){
+                        if (cheatSquares.contains(allCardPanesOnBoard.get(i).sq)) {
+                            allCardPanesOnBoard.get(i).toggleCheatColor();
+                        }
+                    }
+                }
+                System.out.println("Cheating");
+                System.out.println(selectedPanes);
+                primaryStage.show();
+            }
+        };
+
+        cheatButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler2);
 
         for (int col = 0; col < 4; col += 1) {
             for (int r = 0; r < 3; r += 1) {
@@ -148,6 +187,7 @@ public class GuiGame extends Application{
                 square.setStyle("-fx-border-width: 5;"
                         + "-fx-border-color: black;");
                 squares.add(square, col, r);
+                allCardPanesOnBoard.add((CardPane)square);
 
 
             }
