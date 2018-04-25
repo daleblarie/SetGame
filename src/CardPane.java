@@ -51,7 +51,7 @@ public class CardPane extends HBox {
             bHatch = null;
         }
         try {
-            Image rHatch = new Image("red-1.jpg");
+            rHatch = new Image("red-1.jpg");
         } catch (IllegalArgumentException e){
             rHatch = null;
         }

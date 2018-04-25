@@ -42,7 +42,7 @@ public class GuiGame extends Application{
         HBox buttonArea = new HBox();
         Button newGameButton = new Button("New Game");
         Button add3Button = new Button("Add 3 Cards");
-        Text text = new Text(d.remainingCards() + " cards remaining");
+        Text text = new Text(d.remainingCards() + " cards in the deck");
         Text gameOverText = new Text("Game Over!");
         Button cheatButton = new Button("Cheat");
         Button quitButton = new Button("Quit");
@@ -114,7 +114,7 @@ public class GuiGame extends Application{
                     selectedPanes.clear();
                     selectedSquares.clear();
 
-                        text.setText(d.remainingCards() + " cards remaining");
+                        text.setText(d.remainingCards() + " cards in the deck");
                         g.getSelected().clear();
                         primaryStage.show();
 
@@ -141,7 +141,7 @@ public class GuiGame extends Application{
                         squares.add(square, newColIndex, i);
                         allCardPanesOnBoard.add((CardPane)square);
                     }
-                    text.setText(d.remainingCards() + " cards remaining");
+                    text.setText(d.remainingCards() + " cards in the deck");
                     primaryStage.show();
                 } else {
                     System.out.println("Too many cards on the board!");
@@ -159,6 +159,7 @@ public class GuiGame extends Application{
                     selectedPanes.get(i).toggleSelectedColor();
                 }
                 ArrayList<BoardSquare> check = g.cheat();
+                g.clearSelected();
                 selectedPanes.clear();
                 selectedSquares.clear();
                 if (!check.isEmpty()){
