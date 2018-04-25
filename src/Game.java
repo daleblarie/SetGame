@@ -38,7 +38,6 @@ public class Game {
                     Card card3 = sq3.getThisCard();
 
                     if (Card.isSet(card1, card2, card3)) {
-                        System.out.println(card1 + " " + card2 + " " + card3);
                         matchSet.add(sq1);
                         matchSet.add(sq2);
                         matchSet.add(sq3);
@@ -49,6 +48,14 @@ public class Game {
         }
         System.out.println("There are no sets on the board");
         return matchSet;
+    }
+
+    public boolean gameOver(){
+        if (d.isEmpty() && this.cheat().isEmpty()){
+            System.out.println("Gameover!");
+            return true;
+        }
+        return false;
     }
 
 

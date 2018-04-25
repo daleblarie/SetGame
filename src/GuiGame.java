@@ -40,10 +40,13 @@ public class GuiGame extends Application{
     @Override
     public void start(Stage primaryStage) {
         HBox buttonArea = new HBox();
+        Button newGameButton = new Button("New Game");
         Button add3Button = new Button("Add 3 Cards");
-        Text text = new Text("There are" + d.remainingCards() + " cards remaining");
+        Text text = new Text(d.remainingCards() + " cards remaining");
+        Text gameOverText = new Text("Game Over!");
         Button cheatButton = new Button("Cheat");
-        buttonArea.getChildren().addAll(add3Button, text, cheatButton);
+        Button quitButton = new Button("Quit");
+        buttonArea.getChildren().addAll(add3Button, text, cheatButton, quitButton, newGameButton);
         pane.setBottom(buttonArea);
 
 //        sel.add(b.getSquare(0,0));
@@ -96,6 +99,9 @@ public class GuiGame extends Application{
                                 squares.getChildren().remove(selectedPanes.get(i));
                                 allCardPanesOnBoard.remove(selectedPanes.get(i));
                             }
+                           if (g.gameOver()){
+                                squares.getChildren().add(gameOverText);
+                           }
 
                         }
 
@@ -108,7 +114,7 @@ public class GuiGame extends Application{
                     selectedPanes.clear();
                     selectedSquares.clear();
 
-                        text.setText("There are " + d.remainingCards() + " cards remaining");
+                        text.setText(d.remainingCards() + " cards remaining");
                         g.getSelected().clear();
                         primaryStage.show();
 
@@ -135,7 +141,7 @@ public class GuiGame extends Application{
                         squares.add(square, newColIndex, i);
                         allCardPanesOnBoard.add((CardPane)square);
                     }
-                    text.setText("There are " + d.remainingCards() + " cards remaining");
+                    text.setText(d.remainingCards() + " cards remaining");
                     primaryStage.show();
                 } else {
                     System.out.println("Too many cards on the board!");
@@ -176,6 +182,42 @@ public class GuiGame extends Application{
 
         cheatButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler2);
 
+        EventHandler<MouseEvent> eventHandler3 = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                System.exit(0);
+            }
+        };
+
+        quitButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler3);
+
+        EventHandler<MouseEvent> eventHandler4 = new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                for (int i = 0; i < allCardPanesOnBoard.size(); i += 1){
+                    squares.getChildren().remove(allCardPanesOnBoard.get(i));
+                }
+                primaryStage.show();
+                startGame(eventHandler);
+            }
+        };
+
+        newGameButton.addEventFilter(MouseEvent.MOUSE_CLICKED, eventHandler4);
+
+        startGame(eventHandler);
+        pane.setCenter(squares);
+        squares.setAlignment(Pos.CENTER);// center grid pane inside center of borderpane
+
+
+        Scene scene = new Scene(pane);
+        primaryStage.setScene(scene);
+        primaryStage.show();
+    }
+
+    public void startGame(EventHandler<MouseEvent> eventHandler){
+        g = new Game();
+        d = g.getD();
+        b = g.getB();
         for (int col = 0; col < 4; col += 1) {
             for (int r = 0; r < 3; r += 1) {
                 BoardSquare bsq = b.getSquare(r, col);
@@ -192,15 +234,7 @@ public class GuiGame extends Application{
 
             }
         }
-        pane.setCenter(squares);
-        squares.setAlignment(Pos.CENTER);// center grid pane inside center of borderpane
-
-
-        Scene scene = new Scene(pane);
-        primaryStage.setScene(scene);
-        primaryStage.show();
     }
-
     public static void main(String[] args) {
         launch(args);
     }

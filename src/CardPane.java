@@ -28,9 +28,8 @@ import static javafx.scene.paint.Color.*;
 
 public class CardPane extends HBox {
     Paint color;
-    Image bHatch = new Image("blue.jpg");
-    Image rHatch = new Image("red-1.jpg");
-    Image pHatch = new Image("purple.jpg");
+    Image bHatch, rHatch, pHatch;
+
     int cardShape;
     int cardColor;
     int cardNum;
@@ -43,7 +42,27 @@ public class CardPane extends HBox {
 
     Card card;
     BoardSquare sq;
+
+    public void setHatchFill(){
+        try {
+            bHatch = new Image("blue.jpg");
+
+        } catch (IllegalArgumentException e){
+            bHatch = null;
+        }
+        try {
+            Image rHatch = new Image("red-1.jpg");
+        } catch (IllegalArgumentException e){
+            rHatch = null;
+        }
+        try {
+            pHatch = new Image("purple.jpg");
+        }catch (IllegalArgumentException e ){
+            pHatch = null;
+        }
+    }
     public CardPane(BoardSquare sq) {
+        setHatchFill();
         myBoardSquare = this.sq;
         setMyCol(sq.getCol());
         setMyRow(sq.getRow());
@@ -92,12 +111,26 @@ public class CardPane extends HBox {
         cardFill = card.getFill();
         if (cardFill == 1) {
             if (this.color == RED) {
-                shape.setFill(new ImagePattern(rHatch, 0, 0, 1, 1, true));
+                try {
+                    shape.setFill(new ImagePattern(rHatch, 0, 0, 1, 1, true));
+                } catch (NullPointerException e){
+                    Color c = new Color(1,0,0,0.25);
+                    shape.setFill(c);
+                }
             } else if (this.color == BLUE) {
-                shape.setFill(new ImagePattern(bHatch, 0, 0, 1, 1, true));
+                try {
+                    shape.setFill(new ImagePattern(bHatch, 0, 0, 1, 1, true));
+                } catch (NullPointerException e){
+                    Color c = new Color(0,0,1,0.25);
+                    shape.setFill(c);
+                }
             } else if (this.color == PURPLE) {
-                shape.setFill(new ImagePattern(pHatch, 0, 0, 1, 1, true));
-            }
+                try {
+                    shape.setFill(new ImagePattern(pHatch, 0, 0, 1, 1, true));
+                } catch (NullPointerException e){
+                    Color c = new Color(1,0,1,0.25);
+                    shape.setFill(c);
+                }            }
         } else if (cardFill == 2) {
             shape.setFill(WHITE);
         } else {
