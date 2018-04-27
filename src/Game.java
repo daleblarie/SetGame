@@ -16,27 +16,35 @@ public class Game {
         b = new Board(d);
     }
 
+    // method to find a set on the board
     public ArrayList<BoardSquare> cheat() {
+        // creating an arraylist for the matched set
         ArrayList<BoardSquare> matchSet = new ArrayList<>(0);
+        // creating array for listing all the squares on the board
         ArrayList<BoardSquare> listOfAllSquares = new ArrayList<>();
         for (int i = 0; i < b.numRows(); i += 1) {
             for (int j = 0; j < b.numCols(); j += 1) {
                 listOfAllSquares.add(b.getSquare(i, j));
             }
         }
+        // starting at the first element
         for (int i = 0; i < listOfAllSquares.size(); i += 1) {
+            // starting at the element after i
             for (int j = i + 1; j < listOfAllSquares.size(); j += 1) {
+                // starting with the element after j
                 for (int k = j + 1; k < listOfAllSquares.size(); k += 1) {
 
+                    // getting the three squares to test
                     BoardSquare sq1 = listOfAllSquares.get(i);
                     BoardSquare sq2 = listOfAllSquares.get(j);
                     BoardSquare sq3 = listOfAllSquares.get(k);
 
-
+                    // getting the cards from those squares
                     Card card1 = sq1.getThisCard();
                     Card card2 = sq2.getThisCard();
                     Card card3 = sq3.getThisCard();
 
+                    // if they are a set, add them to match set and return it
                     if (Card.isSet(card1, card2, card3)) {
                         matchSet.add(sq1);
                         matchSet.add(sq2);
@@ -46,6 +54,7 @@ public class Game {
                 }
             }
         }
+        // if there is never 3 cards that make a set, print no sets and retern the empty set
         System.out.println("There are no sets on the board");
         return matchSet;
     }
@@ -109,15 +118,18 @@ public class Game {
     // method that tests the selected squares to see if its a set
     public boolean testSelected(){
 
+        // getting the board squares
         BoardSquare sq1 = selected.get(0);
         BoardSquare sq2 = selected.get(1);
         BoardSquare sq3 = selected.get(2);
 
 
+        // getting the cards from the squares
         Card card1 = sq1.getThisCard();
         Card card2 = sq2.getThisCard();
         Card card3 = sq3.getThisCard();
 
+        // testing
         if (Card.isSet(card1, card2, card3)){
             System.out.println("It was a set!");
             return true;
@@ -128,12 +140,16 @@ public class Game {
             return false;
         }
     }
-    
+
+    // method to replace the cards
     public void replaceCards(){
+        // for each square in selected
         for (BoardSquare sq: selected) {
             if (!d.isEmpty()){
+                // if deck is not empty, set it to the top card
                 sq.setThisCard(d.topCard());
             } else{
+                // if deck is empty, get the position of the card and set it to a null square
                 for (int i = 0; i < b.numRows(); i += 1){
                         for (int j = 0; j < b.getRow(i).size(); j += 1){
                             if (b.getRow(i).get(j) == sq){

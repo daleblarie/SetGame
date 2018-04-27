@@ -86,12 +86,12 @@ public class Card {
     private static boolean isShapeAllDifferent(Card card1, Card card2, Card card3){
         return card1.getShape() != card2.getShape() && card2.getShape() != card3.getShape() && card1.getShape() != card3.getShape();
     }
-
+// if its a null card, tell that it is a null
     private static boolean isNull(Card card1, Card card2, Card card3){
         if (card1.getFill() == 3 || card2.getFill() == 3 || card3.getFill() == 3){
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -120,7 +120,8 @@ public class Card {
         if (!isShapeAllDifferent(card1, card2, card3) && !isShapeAllTheSame(card1, card2, card3)) {
             flag = false;
         }
-        if (!isNull(card1, card2, card3)){
+        // if its a null card, then its not a set
+        if (isNull(card1, card2, card3)){
             flag = false;
         }
         return flag;
@@ -144,7 +145,7 @@ public class Card {
             cardAttributes.add("1");
         } else if (num == 1){
             cardAttributes.add("2");
-        } else if (num == 1){
+        } else if (num == 3){
             cardAttributes.add("NULL");
         }else {
             cardAttributes.add("3");
@@ -169,8 +170,10 @@ public class Card {
         }
         if (shape == 0) {
             cardAttributes.add("OVAL");
-        } else if (shape == 1){
+        } else if (shape == 1) {
             cardAttributes.add("RECT");
+        } else if (shape == 3){
+                cardAttributes.add("NULL");
         } else {
             cardAttributes.add("SQUIGGLE");
         }
